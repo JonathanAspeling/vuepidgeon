@@ -1,9 +1,10 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <p>{{ var1 }}</p>
+  <p>{{ shop_records }}</p>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "App",
   props: [],
@@ -11,40 +12,34 @@ export default {
     return {
       request_url:
         "https://spreadsheets.google.com/feeds/list/1tdTxwv8j_De1VTbBhYMwC0B3B6_ZdIBgBVOdkxE0FJI/1/public/values?alt=json",
-        shop_item : [],
-        shop_price : [], 
-        department_cat : []
+      shop_records: [],
     };
   },
   components: {},
-  methods: {
-    parse_data (json_payload){
-
-      entries.forEach(
-        (value)=>{
-          temp_record = {
-            "shop_item": value.gsx$winkelitem.t,
-            "shop_price": value.gsx$prys.t,
-            "dep": value.gsx$departement.t
-
-
-          }
-
-        }
-      );
-
-
-
-
-
-
-
-    }
-  },
+  methods: {},
   mounted() {
-    var1 = axios
-      .get(request_url)
-      .then((response));
+    var shop_records = []
+    function parse_data(json_payload) {
+      json_payload.forEach((value) => {
+       var temp_record = {
+          "shop_item": value.gsx$winkelitem.$t,
+          "shop_price": value.gsx$prys.$t,
+          "dep": value.gsx$departement.$t,
+        };
+        shop_records.push({
+          item: temp_record.shop_item,
+          price: temp_record.shop_price,
+          dep: temp_record.dep,
+        });
+        console.log(shop_records);
+      });
+    }
+
+    axios
+      .get(
+        "https://spreadsheets.google.com/feeds/list/1tdTxwv8j_De1VTbBhYMwC0B3B6_ZdIBgBVOdkxE0FJI/1/public/values?alt=json"
+      )
+      .then((response) => parse_data(response.data.feed.entry));
   },
 };
 </script>
