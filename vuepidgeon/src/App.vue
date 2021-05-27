@@ -1,6 +1,7 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png" />
-  <p>{{ shop_records }}</p>
+  <div>Meow</div>
+  <p v-for="record in this.shop_records">{{ record }}</p>
 </template>
 
 <script>
@@ -18,21 +19,21 @@ export default {
   components: {},
   methods: {},
   mounted() {
-    var shop_records = []
+    let shop_records_mnt = [];
     function parse_data(json_payload) {
       json_payload.forEach((value) => {
-       var temp_record = {
-          "shop_item": value.gsx$winkelitem.$t,
-          "shop_price": value.gsx$prys.$t,
-          "dep": value.gsx$departement.$t,
+        var temp_record = {
+          shop_item: value.gsx$winkelitem.$t,
+          shop_price: value.gsx$prys.$t,
+          dep: value.gsx$departement.$t,
         };
-        shop_records.push({
+        this.shop_records.push({
           item: temp_record.shop_item,
           price: temp_record.shop_price,
           dep: temp_record.dep,
         });
-        console.log(shop_records);
       });
+      console.log(shop_records_mnt);
     }
 
     axios
